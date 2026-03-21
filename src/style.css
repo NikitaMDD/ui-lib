@@ -1,0 +1,22 @@
+* {
+    font-family: "Golos Text", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+button {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 24px;
+    max-height: 68px;
+}
+.field__label {
+    margin: 0 0 10px;
+}
