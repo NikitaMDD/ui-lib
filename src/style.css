@@ -17,6 +17,23 @@ button {
     margin: 0 0 24px;
     max-height: 68px;
 }
+
 .field__label {
     margin: 0 0 10px;
+}
+
+.remove-btn {
+    display: block;
+    color: #2B3033;
+    opacity: .6;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 33px auto 0;
+    transition: opacity .3s ease-in-out;
+    text-align: center;
+}
+
+.remove-btn:hover {
+    opacity: 1;
 }

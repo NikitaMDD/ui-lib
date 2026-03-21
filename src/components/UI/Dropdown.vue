@@ -19,7 +19,7 @@ const isOpen = ref(false);
 const dropdownRef = ref<HTMLElement | null>(null);
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: string): void;
+  'update:modelValue': [value: string];
 }>();
 
 const selectedText = computed(() => {
@@ -39,6 +39,9 @@ const handleClickOutside = (event: MouseEvent) => {
   if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
     isOpen.value = false;
   }
+
+  // console.log('handleClickOutside was called');
+
 }
 
 onMounted(() => {
@@ -122,7 +125,7 @@ onUnmounted(() => {
   }
 
   .dropdown--fulfilled {
-    padding: 15px 13px 15px;
+    padding: 15.5px 13px 15.5px;
   }
 
   .dropdown--active {
@@ -151,7 +154,7 @@ onUnmounted(() => {
     position: absolute;
     width: calc(100% + 2px);
     left: -1px;
-    top: 37px;
+    top: 38px;
     z-index: 1;
   }
 

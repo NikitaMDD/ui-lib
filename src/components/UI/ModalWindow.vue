@@ -9,7 +9,6 @@
 
   const props = withDefaults(defineProps<ModalWindowProps>(), {
     modelValue: false,
-    controls: () => [],
   });
 
   const emit = defineEmits<{
@@ -22,12 +21,9 @@
 
 <template>
   <Transition name="modal-anim">
-    <div v-if="modelValue" class="modal-container">
-      <div
-          class="backdrop"
-          @click="close"
-      ></div>
-      <div class="modal-window">
+    <div v-if="modelValue" class="modal-container" @click="close">
+      <div class="backdrop"></div>
+      <div class="modal-window" @click.stop>
         <div class="modal-window__header">
           <div class="modal-window__title">{{ props.title }}</div>
           <img class="modal-window__exit-btn" :src="exit" alt="" @click="close">
@@ -49,17 +45,19 @@
   height: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: start;
+  overflow-y: auto;
   z-index: 1000;
 }
 
 .modal-window {
   max-width: 703px;
   width: 100%;
+  box-sizing: border-box;
   background: #FFFFFF;
   border-radius: 8px;
   padding: 51px 42px 40px;
-  margin: 38px auto 0;
+  margin: 38px auto 235px;
   position: relative;
   z-index: 1001;
 }
@@ -92,13 +90,14 @@
 }
 
 .backdrop {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.4);
   z-index: 1000;
+  pointer-events: none;
 }
 
 /* --- АНИМАЦИИ (Vue Transition Classes) --- */

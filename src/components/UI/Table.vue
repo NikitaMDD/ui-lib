@@ -1,23 +1,22 @@
 <script setup lang="ts">
 
 import arrow from '@/assets/arrow.svg';
+import type {Pet} from "../../types/types.ts";
 
 interface TableProps {
   className?: string;
-  items: string[];
+  items: Pet[];
 }
 
 const props = defineProps<TableProps>();
 
 const emit = defineEmits<{
-  click: [event: MouseEvent];
+  click: [item: Pet, event: MouseEvent];
 }>();
 
-const handleClick = (event: MouseEvent) => {
-  emit('click', event);
+const handleClick = (item: Pet, event: MouseEvent) => {
+  emit('click', item, event);
 }
-
-console.log(arrow);
 
 </script>
 
@@ -31,9 +30,9 @@ console.log(arrow);
         'table__item--first': index === 0,
         'table__item--last': index === props.items.length - 1,
       }"
-      @click="handleClick"
+      @click="(event) => handleClick(item, event)"
     >
-      <div>{{item}}</div>
+      <div>{{item.name}}</div>
       <img class="table__image" :src="arrow" alt="arrow">
     </div>
   </div>

@@ -9,8 +9,6 @@ import ModalWindow from "./UI/ModalWindow.vue";
 import {computed, reactive, ref} from "vue";
 import type {FormFields, Pet, PetFormData} from "../types/types.ts";
 
-const items = ref(['тест', 'тест1', 'тест']);
-
 const isModalOpen = ref(false);
 
 const currentEditItem = ref<Pet | null>(null);
@@ -102,8 +100,8 @@ const formFields = ref<FormFields[]>([
 ]);
 
 const pets = ref<Pet[]>([
-  { id: 1, name: 'Бобик', type: 'dog', dateOfBirth: '21.12.2026', presenceOfAStamp: true, sterilization: false, treatmentForEctoparasites: true, treatmentForHelminths: false, vaccination: false },
-  { id: 2, name: 'Мурка', type: 'cat', dateOfBirth: '21.12.2026', presenceOfAStamp: true, sterilization: false, treatmentForEctoparasites: true, treatmentForHelminths: false, vaccination: false },
+  { id: 1, name: 'Бобик', type: 'Собака', dateOfBirth: '21.12.2026', presenceOfAStamp: true, sterilization: false, treatmentForEctoparasites: true, treatmentForHelminths: false, vaccination: false },
+  { id: 2, name: 'Мурка', type: 'Кошка', dateOfBirth: '21.12.2026', presenceOfAStamp: true, sterilization: false, treatmentForEctoparasites: true, treatmentForHelminths: false, vaccination: false },
 ]);
 
 const openCreateModal = () => {
@@ -183,7 +181,7 @@ const btnText = computed(() =>
 </script>
 
 <template>
-  <Table :items="items" />
+  <Table :items="pets" @click="openEditModal"/>
   <ModalWindow
     :title="modalTitle"
     v-model="isModalOpen"
@@ -208,6 +206,14 @@ const btnText = computed(() =>
     </div>
 
     <Btn :text="btnText" @click="saveData" :style="'margin: 38px auto 0;'"/>
+    <div
+      v-if="currentEditItem"
+      :class="{
+        'remove-btn': true,
+      }"
+    >
+      Удалить запись
+    </div>
   </ModalWindow>
   <Btn text="Добавить питомца" :disabled="false" :style="'margin: 20px 0 0;'" @click="openCreateModal"/>
 </template>
