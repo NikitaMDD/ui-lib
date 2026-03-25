@@ -5,6 +5,7 @@ import Table from "./UI/Table.vue";
 import Input from "./UI/Input.vue";
 import Dropdown from "./UI/Dropdown.vue";
 import ModalWindow from "./UI/ModalWindow.vue";
+import FileLoader from "./UI/FileLoader.vue";
 
 import {computed, reactive, ref} from "vue";
 import type {FormFields, Pet, PetFormData} from "../types/types.ts";
@@ -182,6 +183,12 @@ const btnText = computed(() =>
 
 <template>
   <Table :items="pets" @click="openEditModal"/>
+
+  <FileLoader
+    title="Добавьте документы"
+    :fileArr="[]"
+  />
+
   <ModalWindow
     :title="modalTitle"
     v-model="isModalOpen"

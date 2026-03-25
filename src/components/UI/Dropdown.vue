@@ -39,9 +39,6 @@ const handleClickOutside = (event: MouseEvent) => {
   if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
     isOpen.value = false;
   }
-
-  // console.log('handleClickOutside was called');
-
 }
 
 onMounted(() => {

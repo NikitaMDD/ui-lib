@@ -46,3 +46,10 @@ interface FileFields extends BaseFields {
 }
 
 export type FormFields = InputFields | DropdownFields | DateFields | FileFields;
+
+export interface FileWithMeta {
+    id: string;
+    date: Date,
+    customName: string;
+    file: File;
+}
