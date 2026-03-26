@@ -20,29 +20,33 @@ export interface PetFormData {
     treatmentForEctoparasites: string;
     treatmentForHelminths: string;
     sterilization: string;
+    files: FileWithMeta[];
 }
 
-interface BaseFields {
+interface CommonFields {
     label: string;
     placeholder: string;
-    key: keyof PetFormData;
 }
 
-interface InputFields extends BaseFields {
+interface InputFields extends CommonFields {
     type: 'input';
+    key: 'name';
 }
 
-interface DropdownFields extends BaseFields {
+interface DropdownFields extends CommonFields {
     type: 'dropdown';
+    key: 'type' | 'presenceOfAStamp' | 'vaccination' | 'treatmentForEctoparasites' | 'treatmentForHelminths' | 'sterilization';
     options: string[];
 }
 
-interface DateFields extends BaseFields {
+interface DateFields extends CommonFields {
     type: 'date';
+    key: 'dateOfBirth';
 }
 
-interface FileFields extends BaseFields {
+interface FileFields extends CommonFields {
     type: 'fileLoader';
+    key: 'files';
 }
 
 export type FormFields = InputFields | DropdownFields | DateFields | FileFields;

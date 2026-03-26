@@ -8,7 +8,7 @@ import ModalWindow from "./UI/ModalWindow.vue";
 import FileLoader from "./UI/FileLoader.vue";
 
 import {computed, reactive, ref} from "vue";
-import type {FormFields, Pet, PetFormData} from "../types/types.ts";
+import type {FileWithMeta, FormFields, Pet, PetFormData} from "../types/types.ts";
 
 const isModalOpen = ref(false);
 
@@ -22,6 +22,7 @@ const formData = reactive<PetFormData>({
   treatmentForEctoparasites: '',
   treatmentForHelminths: '',
   sterilization: '',
+  files: [],
 });
 
 const formFields = ref<FormFields[]>([
@@ -98,6 +99,12 @@ const formFields = ref<FormFields[]>([
     ],
     placeholder: '',
   },
+  {
+    label: 'Добавьте документы',
+    key: 'files',
+    type: 'fileLoader',
+    placeholder: '',
+  },
 ]);
 
 const pets = ref<Pet[]>([
@@ -116,12 +123,21 @@ const openCreateModal = () => {
     treatmentForEctoparasites: '',
     treatmentForHelminths: '',
     sterilization: '',
+    files: [],
   });
   isModalOpen.value = true;
 }
 
 const openEditModal = (item: Pet) => {
   currentEditItem.value = item;
+
+  const existingFiles:FileWithMeta[] = item.files?.map((f, index) => ({
+    id: `existing-${index}`,
+    date: new Date(),
+    customName: f instanceof File ? f.name : 'Документ',
+    file: f instanceof File ? f : new File([], 'placeholder'),
+  })) || [];
+
   Object.assign(formData, {
     name: item.name,
     type: item.type,
@@ -131,6 +147,7 @@ const openEditModal = (item: Pet) => {
     treatmentForEctoparasites: item.treatmentForEctoparasites ? 'да' : 'нет',
     treatmentForHelminths: item.treatmentForHelminths ? 'да' : 'нет',
     sterilization: item.sterilization ? 'да' : 'нет',
+    files: existingFiles,
   });
   isModalOpen.value = true;
 }
@@ -152,19 +169,22 @@ const saveData = () => {
 
   const petData = convertFormDataToPet(formData);
 
+  const filesToSave = formData.files.map(f => f.file);
+
   if (currentEditItem.value) {
     const index = pets.value.findIndex(p => p.id === currentEditItem.value!.id);
     if (index !== -1) {
         pets.value[index] = {
           ...pets.value[index],
           ...petData,
+          files: filesToSave,
         }
     }
   } else {
     pets.value.push({
       id: Date.now(),
       ...petData,
-      files: [],
+      files: filesToSave,
     });
   }
 
@@ -183,11 +203,6 @@ const btnText = computed(() =>
 
 <template>
   <Table :items="pets" @click="openEditModal"/>
-
-  <FileLoader
-    title="Добавьте документы"
-    :fileArr="[]"
-  />
 
   <ModalWindow
     :title="modalTitle"
@@ -209,6 +224,13 @@ const btnText = computed(() =>
         :items="field.options"
         :modelValue="formData[field.key]"
         @update:modelValue="val => formData[field.key] = val"
+      />
+
+      <FileLoader
+          v-if="field.type === 'fileLoader'"
+          :title="field.label"
+          :fileArr="formData.files"
+          @change="val => formData.files = val"
       />
     </div>
 
