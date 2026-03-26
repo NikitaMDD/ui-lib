@@ -6,6 +6,8 @@ interface InputProps {
   className?: string;
   style?: string;
   placeholder?: string;
+  required?: boolean;
+  error?: string;
 }
 
 const props = defineProps<InputProps>();
@@ -23,13 +25,28 @@ const handleInput = (event: Event) => {
 
 <template>
   <div class="field">
-    <label class="field__label" :for="`id_${props.title}`">{{props.title}}</label>
+    <label
+      class="field__label"
+      :class="{
+        'field__label--required': props.error,
+      }"
+      :for="`id_${props.title}`"
+    >
+      {{props.title}}
+<!--      <span v-if="props.required">*</span>-->
+    </label>
     <input
       class="field__input"
+      :class="{
+        'field__input--required': props.error,
+      }"
       :id="`id_${props.title}`"
       :value="props.modelValue"
       @input="handleInput"
     />
+    <div v-if="props.error" class="field__error-message">
+      {{ props.error }}
+    </div>
   </div>
 </template>
 
@@ -52,4 +69,18 @@ const handleInput = (event: Event) => {
   .field__input:focus {
     border: 1px solid #EFFE7D;
   }
+
+  .field__input--required {
+    border: 1px solid rgba(255, 59, 48, 1);
+    border-radius: 8px;
+    background-color: rgba(255, 225, 225, 1);
+  }
+
+  .field__error-message {
+    color: #FF3B30;
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 18px;
+  }
+
 </style>

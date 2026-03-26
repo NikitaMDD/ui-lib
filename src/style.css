@@ -19,6 +19,8 @@ button {
 }
 
 .field__label {
+    font-size: 14px;
+    line-height: 17px;
     margin: 0 0 10px;
 }
 

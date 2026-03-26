@@ -8,6 +8,8 @@ interface DropdownProps {
   placeholder?: string;
   items: string[];
   title: string;
+  required: boolean;
+  error?: string;
 }
 
 const props = withDefaults(defineProps<DropdownProps>(), {

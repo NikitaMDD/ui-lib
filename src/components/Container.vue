@@ -25,12 +25,48 @@ const formData = reactive<PetFormData>({
   files: [],
 });
 
+const formErrors = reactive<Record<string, string>>({});
+
+const validateForm = (): boolean => {
+  Object.keys(formErrors).forEach(key => delete formErrors[key]);
+
+  let isValid = true;
+
+  formFields.value.forEach(field => {
+    if (field.required) {
+      const value = formData[field.key];
+
+      if (field.type === 'fileLoader') {
+        if (!value || (Array.isArray(value) && value.length === 0)) {
+          formErrors[field.key] = 'Пожалуйста, прикрепите файл';
+          isValid = false;
+        }
+      } else {
+        if (!value || (typeof value === 'string' && value.trim() === '')) {
+          formErrors[field.key] = 'Пожалуйста, заполните поле';
+          isValid = false;
+        }
+      }
+    }
+  })
+
+  return isValid;
+
+}
+
+const clearError = (key: string) => {
+  if (formErrors[key]) {
+    delete formErrors[key];
+  }
+}
+
 const formFields = ref<FormFields[]>([
   {
     label: 'Кличка',
     key: 'name',
     type: 'input',
     placeholder: '',
+    required: true,
   },
   {
     label: 'Вид',
@@ -42,12 +78,14 @@ const formFields = ref<FormFields[]>([
         'Птица',
     ],
     placeholder: '',
+    required: true,
   },
   {
     label: 'Дата рождения',
     key: 'dateOfBirth',
     type: 'date',
     placeholder: '',
+    required: true,
   },
   {
     label: 'Наличие клейма',
@@ -58,6 +96,7 @@ const formFields = ref<FormFields[]>([
       'нет',
     ],
     placeholder: '',
+    required: true,
   },
   {
     label: 'Вакцинация',
@@ -68,6 +107,7 @@ const formFields = ref<FormFields[]>([
       'нет',
     ],
     placeholder: '',
+    required: true,
   },
   {
     label: 'Обработка от эктопаразитов',
@@ -78,6 +118,7 @@ const formFields = ref<FormFields[]>([
       'нет',
     ],
     placeholder: '',
+    required: true,
   },
   {
     label: 'Обработка от гельминтов',
@@ -88,6 +129,7 @@ const formFields = ref<FormFields[]>([
       'нет',
     ],
     placeholder: '',
+    required: true,
   },
   {
     label: 'Стерилизация',
@@ -98,12 +140,14 @@ const formFields = ref<FormFields[]>([
       'нет',
     ],
     placeholder: '',
+    required: true,
   },
   {
     label: 'Добавьте документы',
     key: 'files',
     type: 'fileLoader',
     placeholder: '',
+    required: true,
   },
 ]);
 
@@ -167,8 +211,11 @@ const convertFormDataToPet = (formData: PetFormData): Omit<Pet, 'id' | 'files'> 
 
 const saveData = () => {
 
-  const petData = convertFormDataToPet(formData);
+  if (!validateForm()) {
+    return;
+  }
 
+  const petData = convertFormDataToPet(formData);
   const filesToSave = formData.files.map(f => f.file);
 
   if (currentEditItem.value) {
@@ -210,27 +257,49 @@ const btnText = computed(() =>
   >
 
     <div v-for="field in formFields" :key="field.key">
+
       <Input
         v-if="field.type === 'input'"
         :title="field.label"
         :placeholder="field.placeholder"
         :modelValue="formData[field.key]"
-        @update:modelValue="val => formData[field.key] = val"
+        :required="field.required"
+        :error="formErrors[field.key]"
+        @update:modelValue="
+          val => {
+            formData[field.key] = val;
+            clearError(field.key);
+          }
+        "
       />
+
       <Dropdown
         v-if="field.type === 'dropdown'"
         :title="field.label"
         :placeholder="field.placeholder"
         :items="field.options"
         :modelValue="formData[field.key]"
-        @update:modelValue="val => formData[field.key] = val"
+        :required="field.required"
+        :error="formErrors[field.key]"
+        @update:modelValue="
+          val => {
+            formData[field.key] = val;
+            clearError(field.key);
+          }
+        "
       />
 
       <FileLoader
           v-if="field.type === 'fileLoader'"
           :title="field.label"
           :fileArr="formData.files"
-          @change="val => formData.files = val"
+          :required="field.required"
+          @change="
+            val => {
+              formData.files = val;
+              clearError(field.key);
+            }
+          "
       />
     </div>
 

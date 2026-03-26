@@ -26,6 +26,8 @@ export interface PetFormData {
 interface CommonFields {
     label: string;
     placeholder: string;
+    required: boolean;
+    errors?: string;
 }
 
 interface InputFields extends CommonFields {
