@@ -4,7 +4,7 @@ interface InputProps {
   title: string;
   modelValue: string;
   className?: string;
-  style?: string;
+  // style?: string;
   placeholder?: string;
   required?: boolean;
   error?: string;

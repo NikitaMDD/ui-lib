@@ -56,40 +56,39 @@ onUnmounted(() => {
   <div class="field">
     <div class="field__label">{{props.title}}</div>
     <div
-      ref="dropdownRef"
-      :class="
+        ref="dropdownRef"
+        :class="
         {
           'dropdown': true,
           'dropdown--active': isOpen,
           'dropdown--fulfilled': !selectedText,
+          'dropdown--error': props.error && !isOpen, // <--- Изменено: ошибка скрыта при открытом списке
         }
       "
-      @click="toggleDropdown"
+        @click="toggleDropdown"
     >
-      <div
-        class="dropdown__selected-item"
-      >
+      <div class="dropdown__selected-item">
         <div>{{ selectedText }}</div>
         <img
-          :class="
+            :class="
             {
               'dropdown__arrow': true,
               'dropdown__arrow--active': isOpen,
             }
           "
-          :src="arrow"
-          alt=""
+            :src="arrow"
+            alt=""
         >
       </div>
       <Transition name="dropdown-list">
         <div
-          v-if="isOpen"
-          class="dropdown__list-container"
+            v-if="isOpen"
+            class="dropdown__list-container"
         >
           <div
-            v-for="(item, index) in props.items"
-            :key="index"
-            :class="
+              v-for="(item, index) in props.items"
+              :key="index"
+              :class="
               {
                 'dropdown__item': true,
                 'dropdown__item--first': index === 0,
@@ -98,105 +97,131 @@ onUnmounted(() => {
               }
             "
               @click.stop="selectItem(item)"
-            >{{item}}</div>
+          >{{item}}</div>
         </div>
       </Transition>
     </div>
-  </div>
 
+    <div v-if="props.error && !isOpen" class="field__error-message">
+      {{ props.error }}
+    </div>
+  </div>
 </template>
 
 <style scoped>
 
-  .dropdown {
-    max-width: 100%;
-    border-radius: 8px;
-    border: 1px solid #d6d7d8;
-    background-color: #eaeaeb;
-    padding: 8.5px 13px 8.5px;
-    color: #2B3033;
-    font-size: 16px;
-    line-height: 20px;
-    font-weight: 400;
-    position: relative;
-    cursor: pointer;
-    transition: border-radius 0.3s ease-in-out, border 0.3s ease-in-out;
-  }
+.field {
+  margin-bottom: 20px;
+}
 
-  .dropdown--fulfilled {
-    padding: 15.5px 13px 15.5px;
-  }
+.field__label {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #2B3033;
+}
 
-  .dropdown--active {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    border: 1px solid #EFFE7D;
-    border-bottom: 1px solid #d6d7d8;
-  }
+.dropdown {
+  max-width: 100%;
+  border-radius: 8px;
+  border: 1px solid #d6d7d8;
+  background-color: #eaeaeb;
+  padding: 8.5px 13px 8.5px;
+  color: #2B3033;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 400;
+  position: relative;
+  cursor: pointer;
+  transition: border-radius 0.3s ease-in-out, border 0.3s ease-in-out;
+}
 
-  .dropdown__selected-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+.dropdown--fulfilled {
+  padding: 15.5px 13px 15.5px;
+}
 
-  .dropdown__arrow {
-    display: block;
-    transition: transform 0.3s ease-in-out;
-  }
+.dropdown--active {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border: 1px solid #EFFE7D;
+  border-bottom: 1px solid #d6d7d8;
+}
 
-  .dropdown__arrow--active {
-    transform: rotate(-180deg);
-  }
+.dropdown--error {
+  border: 1px solid rgba(255, 59, 48, 1);
+  background-color: rgba(255, 225, 225, 1);
+}
 
-  .dropdown__list-container {
-    position: absolute;
-    width: calc(100% + 2px);
-    left: -1px;
-    top: 38px;
-    z-index: 1;
-  }
+.dropdown__selected-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  .dropdown__item {
-    max-width: 100%;
-    border: 1px solid #d6d7d8;
-    border-left-color: #EFFE7D;
-    border-right-color: #EFFE7D;
-    border-top: 0;
-    background-color: #eaeaeb;
-    padding: 9px 13px 10px;
-    transition: background 0.3s ease-in-out;
-    cursor: pointer;
-  }
+.dropdown__arrow {
+  display: block;
+  transition: transform 0.3s ease-in-out;
+}
 
-  .dropdown__item:hover {
-    background-color: #EFFE7D;
-  }
+.dropdown__arrow--active {
+  transform: rotate(-180deg);
+}
 
-  .dropdown__item--last {
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
-    border-bottom-color: #EFFE7D;
-  }
+.dropdown__list-container {
+  position: absolute;
+  width: calc(100% + 2px);
+  left: -1px;
+  top: 38px;
+  z-index: 1;
+}
 
-  .dropdown-list-enter-from,
-  .dropdown-list-leave-to {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
+.dropdown__item {
+  max-width: 100%;
+  border: 1px solid #d6d7d8;
+  border-left-color: #EFFE7D;
+  border-right-color: #EFFE7D;
+  border-top: 0;
+  background-color: #eaeaeb;
+  padding: 9px 13px 10px;
+  transition: background 0.3s ease-in-out;
+  cursor: pointer;
+}
 
-  .dropdown-list-enter-active,
-  .dropdown-list-leave-active {
-    transition: all 0.3s ease-in-out;
-  }
+.dropdown__item:hover {
+  background-color: #EFFE7D;
+}
 
-  .dropdown-list-enter-to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.dropdown__item--last {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  border-bottom-color: #EFFE7D;
+}
 
-  .dropdown__item--selected {
-    background: #EFFE7D;
-  }
+.dropdown-list-enter-from,
+.dropdown-list-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.dropdown-list-enter-active,
+.dropdown-list-leave-active {
+  transition: all 0.3s ease-in-out;
+}
+
+.dropdown-list-enter-to {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.dropdown__item--selected {
+  background: #EFFE7D;
+}
+
+.field__error-message {
+  color: #FF3B30;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 18px;
+}
 
 </style>

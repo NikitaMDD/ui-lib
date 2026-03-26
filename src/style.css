@@ -15,7 +15,7 @@ button {
     display: flex;
     flex-direction: column;
     margin: 0 0 24px;
-    max-height: 68px;
+    max-height: 64px;
 }
 
 .field__label {

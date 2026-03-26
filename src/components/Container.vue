@@ -271,6 +271,7 @@ const btnText = computed(() =>
             clearError(field.key);
           }
         "
+        style="margin-bottom: 24px"
       />
 
       <Dropdown
@@ -287,19 +288,21 @@ const btnText = computed(() =>
             clearError(field.key);
           }
         "
+        style="margin-bottom: 24px"
       />
 
       <FileLoader
-          v-if="field.type === 'fileLoader'"
-          :title="field.label"
-          :fileArr="formData.files"
-          :required="field.required"
-          @change="
-            val => {
-              formData.files = val;
-              clearError(field.key);
-            }
-          "
+        v-if="field.type === 'fileLoader'"
+        :title="field.label"
+        :fileArr="formData.files"
+        :required="field.required"
+        @change="
+          val => {
+            formData.files = val;
+            clearError(field.key);
+          }
+        "
+        style="margin-bottom: 24px"
       />
     </div>
 
