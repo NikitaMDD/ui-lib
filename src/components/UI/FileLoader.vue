@@ -5,11 +5,12 @@ import {ref, watch} from "vue";
 import plus from '@/assets/plus.svg';
 import fileLogo from '@/assets/file-logo.svg';
 import deleteIcon from '@/assets/delete-icon.svg';
-import type {FileWithMeta} from "../../types/types.ts";
+import type {FileWithMeta} from "../../types/pets/types.ts";
 
 interface FileLoaderProps {
   title: string;
   fileArr: FileWithMeta[];
+  error?: string;
 }
 
 const fileNameInput = ref('');
@@ -90,6 +91,9 @@ const formatDate = (date: Date) => {
         class="file-loader__input-hidden"
         @change="onFileChange"
       >
+      <div class="file-loader__error-message">
+        {{ props.error }}
+      </div>
     </div>
     <TransitionGroup name="file-list" tag="div" class="file-loader__footer">
       <div class="file-loader__file-item" v-for="(file, index) in localFiles" :key="file.id">
@@ -201,6 +205,13 @@ const formatDate = (date: Date) => {
 
   .file-list-move {
     transition: transform 0.3s ease-in-out;
+  }
+
+  .file-loader__error-message {
+    color: #FF3B30;
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 18px;
   }
 
 </style>

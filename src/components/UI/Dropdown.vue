@@ -89,13 +89,13 @@ onUnmounted(() => {
               v-for="(item, index) in props.items"
               :key="index"
               :class="
-              {
-                'dropdown__item': true,
-                'dropdown__item--first': index === 0,
-                'dropdown__item--last': index === props.items.length - 1,
-                'dropdown__item--selected': selectedText === props.items[index],
-              }
-            "
+                {
+                  'dropdown__item': true,
+                  'dropdown__item--first': index === 0,
+                  'dropdown__item--last': index === props.items.length - 1,
+                  'dropdown__item--selected': selectedText === props.items[index],
+                }
+              "
               @click.stop="selectItem(item)"
           >{{item}}</div>
         </div>

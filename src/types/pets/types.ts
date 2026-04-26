@@ -1,5 +1,5 @@
 export interface Pet {
-    id: number;
+    _id: string;
     name: string;
     type: string;
     dateOfBirth: string;
@@ -33,6 +33,7 @@ interface CommonFields {
 interface InputFields extends CommonFields {
     type: 'input';
     key: 'name';
+    mask?: MaskPattern;
 }
 
 interface DropdownFields extends CommonFields {
@@ -44,6 +45,7 @@ interface DropdownFields extends CommonFields {
 interface DateFields extends CommonFields {
     type: 'date';
     key: 'dateOfBirth';
+    mask?: 'date';
 }
 
 interface FileFields extends CommonFields {
@@ -59,3 +61,5 @@ export interface FileWithMeta {
     customName: string;
     file: File;
 }
+
+export type MaskPattern = 'date' | 'phone' | 'numeric' | RegExp | ((value: string) => string);

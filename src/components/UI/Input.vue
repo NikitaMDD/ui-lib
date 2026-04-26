@@ -8,6 +8,8 @@ interface InputProps {
   placeholder?: string;
   required?: boolean;
   error?: string;
+  mark?: 'red' | 'blue' | 'yellow';
+  mask?: 'date' | 'phone' | 'numeric' | RegExp | ((value: string) => string);
 }
 
 const props = defineProps<InputProps>();
@@ -17,7 +19,12 @@ const emit = defineEmits<{
 }>();
 
 const handleInput = (event: Event) => {
+  if ((event as any)._fromMask) {
+    console.log('[Input] skipped masked event');
+    return;
+  }
   const target = event.target as HTMLInputElement;
+  console.log('[Input] emitting:', target.value);
   emit('update:modelValue', target.value);
 };
 
@@ -32,6 +39,12 @@ const handleInput = (event: Event) => {
       }"
       :for="`id_${props.title}`"
     >
+      <span
+        v-if="props.mark"
+        :class="
+         ['field__label-mark', `field__label-mark--${props.mark}`]
+        "
+      ></span>
       {{props.title}}
 <!--      <span v-if="props.required">*</span>-->
     </label>
@@ -43,6 +56,7 @@ const handleInput = (event: Event) => {
       :id="`id_${props.title}`"
       :value="props.modelValue"
       @input="handleInput"
+      v-mask="props.mask"
     />
     <div v-if="props.error" class="field__error-message">
       {{ props.error }}
@@ -81,6 +95,25 @@ const handleInput = (event: Event) => {
     font-size: 10px;
     font-weight: 400;
     line-height: 18px;
+  }
+
+  .field__label-mark {
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    margin: 0 11px 0 0;
+  }
+
+  .field__label-mark--red {
+    background-color: rgba(255, 0, 0, 1);
+  }
+
+  .field__label-mark--yellow {
+    background-color: rgba(239, 254, 125, 1);
+  }
+
+  .field__label-mark--blue {
+    background-color: rgba(0, 122, 255, 1);
   }
 
 </style>

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 
   interface BtnProps {
-    text: string;
     style?: string;
     className?: string;
     disabled?: boolean;
@@ -26,7 +25,7 @@
     @click="handleClick"
     :style="props.style"
   >
-    {{props.text}}
+    <slot/>
   </button>
 </template>
 
